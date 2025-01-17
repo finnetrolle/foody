@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop Menu</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="upper-block">
+        <div class="half-block">
+            <h3>Список блюд</h1>
+            <ul id="dishes-list" class="list">
+                <!-- Блюда будут добавлены сюда через JavaScript -->
+            </ul>
+        </div>
+        <div class="half-block">
+            <h3>Меню</h1>
+            <ul id="menu-list" class="list">
+                <!-- Меню будет обновляться здесь при перетаскивании -->
+            </ul>
+
+        </div>
+
+        <div class="half-block">
+            <h3>КБЖУ</h1>
+            <div>
+                <div class="pretty-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Набрано</th>
+                                <th>Максимум</th>
+                                <th>Дефицит</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Б</td>
+                                <td id="proteins-info"></td>
+                                <td id="proteins-max"></td>
+                                <td id="proteins-diff"></td>
+                            </tr>
+                            <tr>
+                                <td>Ж</td>
+                                <td id="fats-info">2</td>
+                                <td id="fats-max">3</td>
+                                <td id="fats-diff">4</td>
+                            </tr>
+                            <tr>
+                                <td>У</td>
+                                <td id="carbs-info">6</td>
+                                <td id="carbs-max">7</td>
+                                <td id="carbs-diff">8</td>
+                            </tr>
+                            <tr>
+                                <td>кК</td>
+                                <td id="calories-info">10</td>
+                                <td id="calories-max">11</td>
+                                <td id="calories-diff">12</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+    
+                <div id="dishes-amount">
+                    <!-- Информация о КБЖУ будет выводиться сюда -->
+                </div>
+                <div id="shop-list">
+                    <!-- Информация о КБЖУ будет выводиться сюда -->
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="half-block">
+            <h1>Product Table</h1>
+            <table id="productTable" class="pretty-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Number</th>
+                        <th onclick="sortTable(1)">Product Name</th>
+                        <th onclick="sortTable(2)">Weight</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+
+        
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

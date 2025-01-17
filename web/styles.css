@@ -1,0 +1,97 @@
+
+
+body, html {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.upper-block, .lower-block {
+    display: flex;
+    flex: 1;
+}
+
+.half-block {
+    flex: 1;
+    border: 1px solid #000;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.upper-block .half-block:first-child {
+    background-color: #f0e68c; /* Khaki */
+}
+
+.upper-block .half-block:last-child {
+    background-color: #add8e6; /* Light Blue */
+}
+
+.lower-block .half-block:first-child {
+    background-color: #90ee90; /* Light Green */
+}
+
+.lower-block .half-block:last-child {
+    background-color: #ff6347; /* Tomato */
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+}
+
+h3 {
+    text-align: center;
+}
+
+.list {
+    min-height: 300px;
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    list-style-type: none;
+    width: 250px;
+}
+
+.list li {
+    background-color: #f9f9f9;
+    margin-bottom: 2px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    cursor: move;
+}
+
+#calories-info {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.pretty-table {
+    width: 100%;
+    border-collapse: collapse; /* Ensures borders are collapsed into one border */
+    font-family: Arial, sans-serif;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .pretty-table th,
+  .pretty-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd; /* Adds a bottom border to each cell */
+    text-align: left;
+  }
+  
+  .pretty-table th {
+    background-color: #f4f4f4; /* Light grey background for header */
+    color: #333; /* Darker text for header */
+  }
+  
+  .pretty-table tr:hover {
+    background-color: #f8f8f8; /* Lighter background on hover */
+  }
+  
+  .pretty-table tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternating row colors for better readability */
+  }

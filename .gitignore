@@ -1,0 +1,12 @@
+.vscode/
+**/venv/
+logs/
+**/__pycache__/
+*.log
+**/DataSet/
+**/output/
+**/input/
+**/results/
+.venv/
+.DS_Store
+.idea/
