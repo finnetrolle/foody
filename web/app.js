@@ -32,7 +32,8 @@ class App {
             caloriesMaxValue: 0,
             proteinsMaxValue: 0,
             fatsMaxValue: 0,
-            carbsMaxValue: 0
+            carbsMaxValue: 0,
+            dishCounts: {}
         };
     }
 
@@ -55,16 +56,10 @@ class App {
 
         new Sortable(this.dishesList, {
             group: 'shared',
-            animation: 150,
-            onRemove: (evt) => {
-                const item = evt.item;
-                const clone = item.cloneNode(true);
-                this.dishesList.appendChild(clone);
-                this.sortDishesList();
-            }
+            animation: 150
         });
     }
-
+    
     async loadDishesFromServer() {
         try {
             const response = await fetch(this.dishesUri);
@@ -78,6 +73,12 @@ class App {
                 name: dish,
                 calories: 40
             }));
+
+            // Устанавливаем количество каждого блюда в 1 по умолчанию
+            this.state.dishCounts = this.state.dishes.reduce((acc, dish) => {
+                acc[dish.id] = 1;
+                return acc;
+            }, {});
 
             this.renderDishesList(this.state.dishes);
         } catch (error) {
@@ -135,18 +136,47 @@ class App {
         this.dishesList.innerHTML = '';
         dishes.forEach(dish => {
             const li = document.createElement('li');
-            li.textContent = dish.name;
             li.dataset.id = dish.id;
             li.dataset.calories = dish.calories;
+    
+            li.innerHTML = `
+                <span class="dish-name">${dish.name}</span>
+                <div class="quantity-controls">
+                    <button data-action="decrease">-</button>
+                    <span class="count">${this.state.dishCounts[dish.id]}</span>
+                    <button data-action="increase">+</button>
+                </div>
+            `;
+    
+            li.querySelector('button[data-action="decrease"]').addEventListener('click', () => this.changeDishCount(dish.id, -1));
+            li.querySelector('button[data-action="increase"]').addEventListener('click', () => this.changeDishCount(dish.id, 1));
+    
             this.dishesList.appendChild(li);
         });
     }
 
+    changeDishCount(dishId, change) {
+        const currentCount = this.state.dishCounts[dishId];
+        const newCount = Math.max(0, currentCount + change);
+        if (newCount === 0) {
+            // Если количество стало равно нулю, удаляем блюдо из списка
+            delete this.state.dishCounts[dishId];
+            this.renderDishesList(this.state.dishes.filter(d => d.id !== dishId));
+        } else {
+            this.state.dishCounts[dishId] = newCount;
+            document.querySelector(`li[data-id="${dishId}"] .count`).textContent = newCount;
+        }
+    
+        // Перерисовываем меню, если оно было изменено
+        this.updateMenu();
+    }
+    
+
     renderRequiredCpfc(state) {
-        this.caloriesMax.textContent = state.caloriesMaxValue;
-        this.proteinsMax.textContent = state.proteinsMaxValue;
-        this.fatsMax.textContent = state.fatsMaxValue;
-        this.carbsMax.textContent = state.carbsMaxValue;
+        this.caloriesMax.textContent = state.caloriesMaxValue.toFixed(2);
+        this.proteinsMax.textContent = state.proteinsMaxValue.toFixed(2);
+        this.fatsMax.textContent = state.fatsMaxValue.toFixed(2);
+        this.carbsMax.textContent = state.carbsMaxValue.toFixed(2);
     }
 
     sortDishesList() {
@@ -161,23 +191,25 @@ class App {
     parseMenuItems() {
         return Array.from(this.menuList.children).map(item => ({
             id: parseInt(item.dataset.id),
-            calories: parseInt(item.dataset.calories),
-            name: item.textContent
+            calories: parseInt(item.dataset.calories) * this.state.dishCounts[item.dataset.id],
+            name: item.querySelector('span').textContent,
+            count: this.state.dishCounts[item.dataset.id]
         }));
     }
+    
 
     renderCpfsTable(data) {
         const { Calories, Proteins, Fats, Carbs, DishesAmount } = data;
         
-        this.caloriesInfo.textContent = Calories;
-        this.proteinsInfo.textContent = Proteins;
-        this.fatsInfo.textContent = Fats;
-        this.carbsInfo.textContent = Carbs;
+        this.caloriesInfo.textContent = Calories.toFixed(2);
+        this.proteinsInfo.textContent = Proteins.toFixed(2);
+        this.fatsInfo.textContent = Fats.toFixed(2);
+        this.carbsInfo.textContent = Carbs.toFixed(2);
 
-        this.caloriesDiff.textContent = this.state.caloriesMaxValue - Calories;
-        this.proteinsDiff.textContent = this.state.proteinsMaxValue - Proteins;
-        this.fatsDiff.textContent = this.state.fatsMaxValue - Fats;
-        this.carbsDiff.textContent = this.state.carbsMaxValue - Carbs;
+        this.caloriesDiff.textContent = (this.state.caloriesMaxValue - Calories).toFixed(2);
+        this.proteinsDiff.textContent = (this.state.proteinsMaxValue - Proteins).toFixed(2);
+        this.fatsDiff.textContent = (this.state.fatsMaxValue - Fats).toFixed(2);
+        this.carbsDiff.textContent = (this.state.carbsMaxValue - Carbs).toFixed(2);
 
         this.dishesAmount.textContent = DishesAmount;
     }

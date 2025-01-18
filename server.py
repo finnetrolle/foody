@@ -68,10 +68,12 @@ async def calc_required_cpfc(request):
 async def calc(request):
     #get data from request
     data = request.json
+    print(data)
     menu = []
     for i in data:
         name = i['name']
-        menu.append(dishes_dict[name])
+        for _ in range(i['count']):
+            menu.append(dishes_dict[name])
         
     total_cpfc = CPFC(0,0,0)
     total_weight = 0
