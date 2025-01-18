@@ -52,7 +52,7 @@ async def ping(request):
     return json(result, headers = {"Access-Control-Allow-Origin": "*"})
 
 
-@app.post("/calcReqiuredCpfc")
+@app.post("/calcRequiredCpfc")
 async def calc_required_cpfc(request):
     data = request.json
     #todo insert request parsing
@@ -61,6 +61,7 @@ async def calc_required_cpfc(request):
     result['fats'] = 460.0
     result['carbs'] = 977.5
     result['calories'] = 11500
+    print('CPFC data requested')
     return json(result)
 
 @app.post("/calc")
@@ -96,7 +97,6 @@ async def calc(request):
                 
     result['shoplist'] = shop_list
             
-    print(result)
     return json(result)
 
 
