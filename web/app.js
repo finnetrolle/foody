@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 class App {
+    /**
+     * Конструктор класса App.
+     * Инициализирует ссылки на DOM-элементы и состояние приложения.
+     */
     constructor() {
         this.dishesList = document.getElementById('dishes-list');
         this.menuList = document.getElementById('menu-list');
@@ -37,6 +41,13 @@ class App {
         };
     }
 
+    /**
+     * Метод init выполняет начальную загрузку данных с сервера и инициализацию компонентов интерфейса.
+     *
+     * @async
+     * @function
+     * @returns {Promise<void>} Промис, который резолвится после завершения инициализации.
+     */
     async init() {
         try {
             await Promise.all([this.loadDishesFromServer(), this.loadRequiredCpfcFromServer()]);
@@ -46,6 +57,11 @@ class App {
         }
     }
 
+    /**
+     * Метод initializeSortable настраивает возможность перетаскивания элементов в списке меню.
+     *
+     * @function
+     */
     initializeSortable() {
         new Sortable(this.menuList, {
             group: 'shared',
@@ -60,6 +76,13 @@ class App {
         });
     }
     
+    /**
+     * Метод loadDishesFromServer загружает список блюд с сервера и обновляет состояние приложения.
+     *
+     * @async
+     * @function
+     * @returns {Promise<void>} Промис, который резолвится после завершения загрузки данных.
+     */
     async loadDishesFromServer() {
         try {
             const response = await fetch(this.dishesUri);
@@ -86,6 +109,13 @@ class App {
         }
     }
 
+    /**
+     * Метод loadRequiredCpfcFromServer загружает необходимые значения калорий, белков, жиров и углеводов с сервера.
+     *
+     * @async
+     * @function
+     * @returns {Promise<void>} Промис, который резолвится после завершения загрузки данных.
+     */
     async loadRequiredCpfcFromServer() {
         try {
             const response = await fetch(this.requiredCpfcUri, createPostRequest({}));
@@ -105,6 +135,13 @@ class App {
         }
     }
 
+    /**
+     * Метод updateMenu обновляет информацию о меню на основе перетаскиваемых элементов и запрашивает новые данные с сервера.
+     *
+     * @async
+     * @function
+     * @returns {Promise<void>} Промис, который резолвится после завершения обновления информации.
+     */
     async updateMenu() {
         try {
             const menuItems = this.parseMenuItems();
@@ -123,6 +160,11 @@ class App {
         }
     }
 
+    /**
+     * Метод sortDishesList сортирует список блюд в DOM в соответствии с их идентификаторами.
+     *
+     * @function
+     */
     sortDishesList() {
         const sortedItems = Array.from(this.dishesList.children).sort((a, b) => 
             parseInt(a.dataset.id) - parseInt(b.dataset.id)
@@ -132,6 +174,11 @@ class App {
         sortedItems.forEach(item => this.dishesList.appendChild(item));
     }
 
+    /**
+     * Метод renderDishesList отображает список блюд на странице.
+     *
+     * @param {Array<Object>} dishes - Массив объектов, представляющих блюда.
+     */
     renderDishesList(dishes) {
         this.dishesList.innerHTML = '';
         dishes.forEach(dish => {
@@ -155,6 +202,13 @@ class App {
         });
     }
 
+    /**
+     * Метод changeDishCount изменяет количество выбранного блюда и обновляет состояние приложения.
+     *
+     * @function
+     * @param {number} dishId - Идентификатор блюда, количество которого нужно изменить.
+     * @param {number} change - Значение изменения количества (может быть положительным или отрицательным).
+     */
     changeDishCount(dishId, change) {
         const currentCount = this.state.dishCounts[dishId];
         const newCount = Math.max(0, currentCount + change);
@@ -171,7 +225,11 @@ class App {
         this.updateMenu();
     }
     
-
+    /**
+     * Метод renderRequiredCpfc обновляет информацию о требуемых значениях калорий, белков, жиров и углеводов на странице.
+     *
+     * @param {Object} state - Объект состояния приложения, содержащий необходимые значения.
+     */
     renderRequiredCpfc(state) {
         this.caloriesMax.textContent = state.caloriesMaxValue.toFixed(2);
         this.proteinsMax.textContent = state.proteinsMaxValue.toFixed(2);
@@ -179,15 +237,12 @@ class App {
         this.carbsMax.textContent = state.carbsMaxValue.toFixed(2);
     }
 
-    sortDishesList() {
-        const sortedItems = Array.from(this.dishesList.children).sort((a, b) => 
-            parseInt(a.dataset.id) - parseInt(b.dataset.id)
-        );
-
-        this.dishesList.innerHTML = '';
-        sortedItems.forEach(item => this.dishesList.appendChild(item));
-    }
-
+    /**
+     * Метод parseMenuItems извлекает информацию о блюдах в меню для отправки на сервер.
+     *
+     * @function
+     * @returns {Array<Object>} Массив объектов, представляющих элементы меню.
+     */
     parseMenuItems() {
         return Array.from(this.menuList.children).map(item => ({
             id: parseInt(item.dataset.id),
@@ -197,7 +252,11 @@ class App {
         }));
     }
     
-
+    /**
+     * Метод renderCpfsTable отображает таблицу с информацией о калориях, белках, жирах и углеводах на странице.
+     *
+     * @param {Object} data - Объект с данными для отображения.
+     */
     renderCpfsTable(data) {
         const { Calories, Proteins, Fats, Carbs, DishesAmount } = data;
         
@@ -214,6 +273,11 @@ class App {
         this.dishesAmount.textContent = DishesAmount;
     }
 
+    /**
+     * Метод renderProductsTable отображает таблицу с необходимыми продуктами для приготовления блюд.
+     *
+     * @param {Object} data - Объект с данными для отображения.
+     */
     renderProductsTable(data) {
         const tableBody = document.querySelector('#productTable tbody');
         tableBody.innerHTML = '';
