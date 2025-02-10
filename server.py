@@ -57,8 +57,8 @@ async def calc_required_cpfc(request):
     data = request.json
     #todo insert request parsing
     result = dict()
-    result["proteins"] = 862.5
-    result['fats'] = 460.0
+    result["proteins"] = 862
+    result['fats'] = 460
     result['carbs'] = 977.5
     result['calories'] = 11500
     print('CPFC data requested')
